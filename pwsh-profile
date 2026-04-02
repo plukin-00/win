@@ -1,1 +1,24 @@
+## notepad $PROFILE
+
+oh-my-posh init pwsh --config 'hunk' | Invoke-Expression
+Import-Module -Name Terminal-Icons
+
+$Tab = [char]9
+
+## Uptime
+$uptime = (Get-Date) - (Get-Uptime -Since)
+
+## MOTD
+figlet -f small "$(hostname)"
+Write-Host 'System:' "$Tab" (Get-CimInstance win32_operatingsystem | % caption)
+Write-Host 'Powershell:' "$Tab" $PsVersionTable.PSVersion
+if ( ($uptime.Days) -eq 0 ) {
+	Write-Host 'Uptime:' "$Tab" $($uptime.Hours) Std. $($uptime.Minutes) Min.
+} else {
+	Write-Host 'Uptime:' "$Tab "$($uptime.Days) Tage $($uptime.Hours) Std. $($uptime.Minutes) Min.
+}
+Write-Host 'Int. IP:' "$Tab" (Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $(Get-NetConnectionProfile | Select-Object -ExpandProperty InterfaceIndex) | Select-Object -ExpandProperty IPAddress)
+Write-Host 'Ext. IP:' "$Tab" (curl -4 ifconfig.me -s) / (curl -6 ifconfig.me -s)
+Write-Host 'Datum:' "$Tab$Tab" (Get-date)
+Write-Host ''
 
